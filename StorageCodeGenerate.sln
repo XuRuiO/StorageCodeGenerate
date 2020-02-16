@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageCodeGenerate", "StorageCodeGenerate\StorageCodeGenerate.csproj", "{C3E160DC-BC67-4566-BF19-A6E5A764AB8D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C3E160DC-BC67-4566-BF19-A6E5A764AB8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3E160DC-BC67-4566-BF19-A6E5A764AB8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3E160DC-BC67-4566-BF19-A6E5A764AB8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3E160DC-BC67-4566-BF19-A6E5A764AB8D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ED1F842E-D406-46AA-858F-F0A1226A47DE}
+	EndGlobalSection
+EndGlobal
