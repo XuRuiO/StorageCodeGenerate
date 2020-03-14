@@ -15,7 +15,7 @@ namespace StorageCodeGenerate
         {
             var db = new SqlSugarClient(new ConnectionConfig()
             {
-                ConnectionString = "Server=.;Database=DBCRM;User ID=sa;Password=123456;",       //连接字符串
+                ConnectionString = "Server=.;Database=DB;User ID=sa;Password=767249001;",       //连接字符串
                 DbType = DbType.SqlServer,      //数据库类型
                 IsAutoCloseConnection = true,     //(默认false)是否自动释放数据库，设为true我们不需要close或者Using的操作，比较推荐
                 InitKeyType = InitKeyType.SystemTable
@@ -38,14 +38,15 @@ namespace StorageCodeGenerate
         {
             //第一次可以创建所有的表，以后加表的话可以通过集合，通过 Db.DbFirst.Where() 控制创建需要生成的实体表
             //后面的IRepository、Repository、IService、Service控制同理
-            //var entityNameList = new List<string>()
-            //{
-            //    "T_User"
-            //};
+            var entityNameList = new List<string>()
+            {
+                "T_User"
+            };
 
             Db.DbFirst
                 //.Where(entityNameList.ToArray())
                 .IsCreateAttribute()        //是否需要引入命名控件：   using SqlSugar;
+                .IsCreateDefaultValue()     //是否使用默认值，使用构造函数创建
                 .SettingClassTemplate(old =>
                 {
                     return "{using}\r\n" +
@@ -54,6 +55,10 @@ namespace StorageCodeGenerate
                            "{ClassDescription}{SugarTable}\r\n" +
                            DbFirstTemplate.ClassSpace + "public partial class {ClassName}\r\n" +
                            DbFirstTemplate.ClassSpace + "{\r\n" +
+                           DbFirstTemplate.PropertySpace + "public {ClassName}()\r\n" +
+                           DbFirstTemplate.PropertySpace + "{\r\n" +
+                           "{Constructor}" +
+                           DbFirstTemplate.PropertySpace + "}\r\n" +
                            "{PropertyName}" +
                            DbFirstTemplate.ClassSpace + "}\r\n" +
                            "}\r\n";
@@ -63,14 +68,18 @@ namespace StorageCodeGenerate
                 {
                     return DbFirstTemplate.PropertySpace + "/// <summary>\r\n" +
                            DbFirstTemplate.PropertySpace + "/// {PropertyDescription}\r\n" +
-                           DbFirstTemplate.PropertySpace + "/// </summary>\r\n";
+                           DbFirstTemplate.PropertySpace + "/// </summary>";
                 })
                 .SettingPropertyTemplate(old =>
                 {
-                    return DbFirstTemplate.PropertySpace + "public {PropertyType} {PropertyName} { get; set; }\r\n";
+                    return DbFirstTemplate.PropertySpace + "{SugarColumn}\r\n" +
+                           DbFirstTemplate.PropertySpace + "public {PropertyType} {PropertyName} { get; set; }\r\n";
                 })
-                .SettingConstructorTemplate(old => { return old; })
-                .CreateClassFile(@"E:\SqlSugarGenerateCode\Models", "CRM.Model.Models");
+                .SettingConstructorTemplate(old =>
+                {
+                    return DbFirstTemplate.PropertySpace + DbFirstTemplate.ClassSpace + "this.{PropertyName} = {DefaultValue};\r\n";
+                })
+                .CreateClassFile(@"F:\All Projects\ProjectManagement\Project Great Song\Great.Song.Api\Great.Song.Model\Models\Generate", "Great.Song.Model.Models");
         }
 
         /// <summary>
@@ -98,15 +107,15 @@ namespace StorageCodeGenerate
                 .SettingNamespaceTemplate(old =>
                 {
                     //自定义命名Using的内容
-                    var UserDefinedTemp = "using CRM.IRepository.IBase;\r\n" +
-                                          "using CRM.Model.Models;\r\n";
+                    var UserDefinedTemp = "using Great.Song.IRepository.IBase;\r\n" +
+                                          "using Great.Song.Model.Models;\r\n";
 
                     StringBuilder sb = new StringBuilder();
                     sb.Append(old).Append(UserDefinedTemp);
 
                     return sb.ToString();
                 })
-                .CreateIRepositoryIService(@"E:\SqlSugarGenerateCode\IRepositorys", fileName, "CRM.IRepository.IRepositorys");
+                .CreateIRepositoryIService(@"F:\All Projects\ProjectManagement\Project Great Song\Great.Song.Api\Great.Song.IRepository\IRepositorys", fileName, "Great.Song.IRepository.IRepositorys");
         }
 
         /// <summary>
@@ -134,21 +143,21 @@ namespace StorageCodeGenerate
                 .SettingNamespaceTemplate(old =>
                 {
                     //自定义命名Using的内容
-                    var UserDefinedTemp = "using CRM.IRepository.IRepositorys;\r\n" +
-                                          "using CRM.Model.Models;\r\n" +
-                                          "using CRM.Repository.Base;\r\n";
+                    var UserDefinedTemp = "using Great.Song.IRepository.IRepositorys;\r\n" +
+                                          "using Great.Song.Model.Models;\r\n" +
+                                          "using Great.Song.Repository.Base;\r\n";
 
                     StringBuilder sb = new StringBuilder();
                     sb.Append(UserDefinedTemp).Append(old);
 
                     return sb.ToString();
                 })
-                .CreateIRepositoryIService(@"E:\SqlSugarGenerateCode\Repositorys", fileName, "CRM.Repository.Repositorys");
+                .CreateIRepositoryIService(@"F:\All Projects\ProjectManagement\Project Great Song\Great.Song.Api\Great.Song.Repository\Repositorys", fileName, "Great.Song.Repository.Repositorys");
         }
 
         /// <summary>
         /// 生成IService服务接口层
-        /// </summary>
+        /// </summary>发
         public void GenerateIServiceCode()
         {
             //文件名称
@@ -170,15 +179,15 @@ namespace StorageCodeGenerate
                 .SettingNamespaceTemplate(old =>
                 {
                     //自定义命名Using的内容
-                    var UserDefinedTemp = "using CRM.IService.IBase;\r\n" +
-                                          "using CRM.Model.Models;\r\n";
+                    var UserDefinedTemp = "using Great.Song.IService.IBase;\r\n" +
+                                          "using Great.Song.Model.Models;\r\n";
 
                     StringBuilder sb = new StringBuilder();
                     sb.Append(old).Append(UserDefinedTemp);
 
                     return sb.ToString();
                 })
-                .CreateIRepositoryIService(@"E:\SqlSugarGenerateCode\IServices", fileName, "CRM.IService.IServices");
+                .CreateIRepositoryIService(@"F:\All Projects\ProjectManagement\Project Great Song\Great.Song.Api\Great.Song.IService\IServices", fileName, "Great.Song.IService.IServices");
         }
 
         /// <summary>
@@ -205,16 +214,16 @@ namespace StorageCodeGenerate
                 .SettingNamespaceTemplate(old =>
                 {
                     //自定义命名Using的内容
-                    var UserDefinedTemp = "using CRM.IService.IServices;\r\n" +
-                                          "using CRM.Model.Models;\r\n" +
-                                          "using CRM.Service.Base;\r\n";
+                    var UserDefinedTemp = "using Great.Song.IService.IServices;\r\n" +
+                                          "using Great.Song.Model.Models;\r\n" +
+                                          "using Great.Song.Service.Base;\r\n";
 
                     StringBuilder sb = new StringBuilder();
                     sb.Append(UserDefinedTemp).Append(old);
 
                     return sb.ToString();
                 })
-                .CreateIRepositoryIService(@"E:\SqlSugarGenerateCode\Services", fileName, "CRM.Service.Services");
+                .CreateIRepositoryIService(@"F:\All Projects\ProjectManagement\Project Great Song\Great.Song.Api\Great.Song.Service\Services", fileName, "CRM.Service.Services");
         }
     }
 }

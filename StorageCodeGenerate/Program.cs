@@ -15,6 +15,7 @@ namespace StorageCodeGenerate
 
             //生成Model模型
             generate.GenerateModelCode();
+
             //生成IRepository仓储接口层
             generate.GenerateIRepositoryCode();
             //生成Repository仓储接口实现层
